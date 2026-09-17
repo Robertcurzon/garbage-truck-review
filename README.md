@@ -4,6 +4,25 @@ A review-first file retention tool for finding old installers, temporary files, 
 
 It generates a local checkbox review page. Nothing is removed during a scan, and approved cleanup is moved to a recoverable quarantine directory rather than permanently erased.
 
+![Garbage Truck Review overview](docs/screenshots/review-overview.png)
+
+## What It Is For
+
+Garbage Truck Review helps clean the accumulated junk on a personal computer without handing an automated cleaner permission to erase whatever it wants.
+
+It is designed for files that often become useless after a while:
+
+- Old app installers, downloaded archives, and duplicate setup packages
+- Incomplete downloads and temporary files
+- Screenshots, screen recordings, clips, and transcripts
+- Old media-production inputs and generated renders
+- Output folders left behind by one-off workflows
+- Rebuildable folders such as `node_modules`, virtual environments, and test coverage
+
+Candidates must be older than the configured retention period. The review queue shows higher-confidence items first and sorts larger items ahead of smaller ones within each confidence level, making the easiest disk-space wins visible early.
+
+The tool does not try to decide whether a personal file is meaningful. Ambiguous items stay in the review queue for a human decision.
+
 ## Why
 
 File cleanup tools tend to be either too manual or too eager. Garbage Truck Review separates discovery from deletion:
@@ -13,6 +32,8 @@ File cleanup tools tend to be either too manual or too eager. Garbage Truck Revi
 3. Mark items as **Approve cleanup** or **Keep forever**.
 4. Export decisions.
 5. Apply the exact reviewed decision file to a quarantine batch.
+
+![Review decisions and controls](docs/screenshots/review-controls.png)
 
 ## Requirements
 
@@ -39,6 +60,75 @@ garbage-truck apply --decisions ~/Downloads/garbage-truck-decisions.json --confi
 ```
 
 Approved items are moved to `~/.garbage-truck/quarantine/`. The receipt records every source and destination path.
+
+## Review Page Controls
+
+Each candidate shows its path, reason, confidence, size, and age.
+
+- **Approve cleanup:** Includes that item in the exported cleanup decision list. It does not delete or move the item immediately.
+- **Keep forever:** Records that the item should be protected. Add accepted permanent exceptions to `keepForever` in the configuration so future scans skip them automatically.
+- **Filter paths or reasons:** Narrows the visible list using text from the candidate path or cleanup reason.
+- **Select high:** Checks every high-confidence candidate, such as stale installers and incomplete downloads. Review the selection before exporting.
+- **Clear:** Removes all current checkbox decisions stored by the review page.
+- **Copy:** Copies the current decision payload to the clipboard.
+- **Export JSON:** Downloads the exact decisions used by the `apply` command.
+
+Checkbox decisions are stored locally in the browser. They do not modify the scanned files.
+
+## Setup In Detail
+
+### 1. Install Node.js
+
+Install Node.js 20 or newer from [nodejs.org](https://nodejs.org/) or your operating system's package manager.
+
+Confirm the installation:
+
+```bash
+node --version
+npm --version
+```
+
+### 2. Download and link the CLI
+
+```bash
+git clone https://github.com/Robertcurzon/garbage-truck-review.git
+cd garbage-truck-review
+npm link
+```
+
+`npm link` makes the `garbage-truck` command available from other folders on the computer. No third-party runtime packages are installed by this project.
+
+### 3. Create a local configuration
+
+```bash
+mkdir ~/garbage-truck-home
+cd ~/garbage-truck-home
+garbage-truck init
+```
+
+Edit `garbage-truck.config.json` to choose the folders to scan, the retention period, generated-workflow markers, and any paths that must be kept forever.
+
+### 4. Run the first scan
+
+```bash
+garbage-truck scan
+```
+
+Open `garbage-truck-report/index.html` in a browser. The scan reads metadata only and never moves files.
+
+### 5. Review and export
+
+Mark candidates using **Approve cleanup** or **Keep forever**, then click **Export JSON**. The downloaded decision file is a record of exactly what was reviewed.
+
+### 6. Move approved items to quarantine
+
+```bash
+garbage-truck apply \
+  --decisions ~/Downloads/garbage-truck-decisions.json \
+  --confirm
+```
+
+Inspect the quarantine folder and cleanup receipt before permanently removing anything. Files can be restored by moving them back to their recorded source paths.
 
 ## Commands
 
