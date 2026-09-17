@@ -1,0 +1,33 @@
+{
+  "name": "garbage-truck-review",
+  "version": "0.1.0",
+  "description": "A review-first local file retention scanner with a checkbox approval queue.",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "garbage-truck": "bin/garbage-truck.js"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check bin/garbage-truck.js && node --check src/config.js && node --check src/scanner.js && node --check src/report.js && node --check src/apply.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "cleanup",
+    "retention",
+    "files",
+    "privacy",
+    "review",
+    "cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Robertcurzon/garbage-truck-review.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Robertcurzon/garbage-truck-review/issues"
+  },
+  "homepage": "https://github.com/Robertcurzon/garbage-truck-review#readme"
+}

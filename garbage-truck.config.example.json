@@ -1,0 +1,25 @@
+{
+  "retentionDays": 30,
+  "roots": [
+    "~/Downloads",
+    "~/Desktop",
+    "~/Documents",
+    "~/Movies",
+    "~/Pictures"
+  ],
+  "keepForever": [
+    {
+      "path": "~/Pictures/channel-brand",
+      "reason": "Reusable channel art and brand assets"
+    }
+  ],
+  "neverScan": [],
+  "generatedPathMarkers": [
+    "/media-project/",
+    "/tmp/",
+    "/output/",
+    "/outputs/"
+  ],
+  "outputDirectory": "./garbage-truck-report",
+  "maxEntries": 250000
+}
